@@ -47,7 +47,7 @@ public class CustomerDAOI implements CustomerDAO {
     @GetMapping("/api/v1/search_customer_by_id")
     public List<CustomerTO> searchForCustomerByID(Integer id) {
         return this.template.query(
-                "select * from customers where customer_id = '"+id+"'",
+                "select * from customers where customer_id = ? ", new Object[]{id},
                 new BeanPropertyRowMapper<CustomerTO>(CustomerTO.class));
     }
 
@@ -56,7 +56,7 @@ public class CustomerDAOI implements CustomerDAO {
     @GetMapping("/api/v1/search_customer_by_name")
     public List<CustomerTO> searchForCustomerByName(String name) {
         return this.template.query(
-                "select * from customers where customer_name like '%"+name+"%'",
+                "select * from customers where customer_name like ? ", new Object[]{name+"%"},
                 new BeanPropertyRowMapper<CustomerTO>(CustomerTO.class));
     }
 
@@ -66,7 +66,7 @@ public class CustomerDAOI implements CustomerDAO {
     @GetMapping("/api/v1/customers/search_customer_by_level")
     public List<CustomerTO> searchForCustomerByLevel(String level) {
         return this.template.query(
-                "select * from customers where customer_level like '%"+level+"%'",
+                "select * from customers where customer_level = ? ", new Object[]{level},
                 new BeanPropertyRowMapper<CustomerTO>(CustomerTO.class));
     }
 }
