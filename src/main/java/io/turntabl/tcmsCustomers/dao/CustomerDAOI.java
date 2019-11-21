@@ -4,6 +4,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.turntabl.tcmsCustomers.models.CustomerTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,10 +22,20 @@ public class CustomerDAOI implements CustomerDAO {
     @Autowired
     JdbcTemplate template;
 
+    @Autowired
+    RedisTemplate<String, CustomerTO> redisTemplate;
+
+    @Autowired
+    ChannelTopic topic;
+
     @ApiOperation("Add a New Customer")
     @Override
     @PostMapping("/api/v1/add_new_customer")
-    public void addNewCustomer() {
+    public void addNewCustomer(CustomerTO customer) {
+        String sql = "INSERT INTO customers " +
+                "(customer_id, customer_name, customer_email, customer_address, customer_telephone, customer_level) values (?, ?, ?, ?, ?, ?)" ;
+        template.update(sql, new Object[]{customer.getCustomer_id(), customer.getCustomer_name(), customer.getCustomer_email(), customer.getCustomer_address(), customer.getCustomer_telephone(), customer.getCustomer_level()});
+        redisTemplate.convertAndSend(topic.getTopic(), customer);
     }
 
     @ApiOperation("Get all Customers")

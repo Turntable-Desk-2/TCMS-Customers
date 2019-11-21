@@ -5,7 +5,7 @@ import io.turntabl.tcmsCustomers.models.CustomerTO;
 import java.util.List;
 
 public interface CustomerDAO {
-    public void addNewCustomer();
+    public void addNewCustomer(CustomerTO customer);
     public List<CustomerTO> getAllCustomers();
     public String updateCustomerInfo(Integer id);
     public List<CustomerTO> searchForCustomerByID(Integer id);
