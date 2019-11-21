@@ -6,9 +6,8 @@ import io.turntabl.tcmsCustomers.models.CustomerTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,13 +20,15 @@ public class CustomerDAOI implements CustomerDAO {
     @Autowired
     JdbcTemplate template;
 
+    @ApiOperation("Add a New Customer")
     @Override
+    @PostMapping("/api/v1/add_new_customer")
     public void addNewCustomer() {
     }
 
     @ApiOperation("Get all Customers")
     @Override
-    @GetMapping("/api/v1/customers")
+    @GetMapping("/api/v1/get_all_customers")
     public List<CustomerTO> getAllCustomers() {
         return this.template.query(
                 "select * from customers",
@@ -36,30 +37,36 @@ public class CustomerDAOI implements CustomerDAO {
 
     @ApiOperation("Update a Customer Info")
     @Override
-    @PutMapping("/api/v1/customers/update")
-    public void updateCustomerInfo(Integer id) {
-
+    @PutMapping("/api/v1/update_customer")
+    public String updateCustomerInfo(Integer id) {
+        return null;
     }
 
     @ApiOperation("Search For Customer by ID")
     @Override
-    @GetMapping("/api/v1/customers/id")
-    public CustomerTO searchForCustomerByID(Integer id) {
-        return null;
+    @GetMapping("/api/v1/search_customer_by_id")
+    public List<CustomerTO> searchForCustomerByID(Integer id) {
+        return this.template.query(
+                "select * from customers where customer_id = '"+id+"'",
+                new BeanPropertyRowMapper<CustomerTO>(CustomerTO.class));
     }
 
     @ApiOperation("Search customer By Name")
     @Override
-    @GetMapping("/api/v1/customers/id")
+    @GetMapping("/api/v1/search_customer_by_name")
     public List<CustomerTO> searchForCustomerByName(String name) {
-        return null;
+        return this.template.query(
+                "select * from customers where customer_name like '%"+name+"%'",
+                new BeanPropertyRowMapper<CustomerTO>(CustomerTO.class));
     }
 
 
     @ApiOperation("Get Customer By Level")
     @Override
-    @GetMapping("/api/v1/customers/id/level")
+    @GetMapping("/api/v1/customers/search_customer_by_level")
     public List<CustomerTO> searchForCustomerByLevel(String level) {
-        return null;
+        return this.template.query(
+                "select * from customers where customer_level like '%"+level+"%'",
+                new BeanPropertyRowMapper<CustomerTO>(CustomerTO.class));
     }
 }

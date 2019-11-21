@@ -7,8 +7,8 @@ import java.util.List;
 public interface CustomerDAO {
     public void addNewCustomer();
     public List<CustomerTO> getAllCustomers();
-    public void updateCustomerInfo(Integer id);
-    public CustomerTO searchForCustomerByID(Integer id);
+    public String updateCustomerInfo(Integer id);
+    public List<CustomerTO> searchForCustomerByID(Integer id);
     public List<CustomerTO> searchForCustomerByName(String name);
     public List<CustomerTO> searchForCustomerByLevel(String level);
 }
