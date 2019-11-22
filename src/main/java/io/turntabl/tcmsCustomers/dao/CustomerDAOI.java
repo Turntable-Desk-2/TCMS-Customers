@@ -2,16 +2,14 @@ package io.turntabl.tcmsCustomers.dao;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.turntabl.tcmsCustomers.extra.DBVars;
 import io.turntabl.tcmsCustomers.models.CustomerTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,55 +28,61 @@ public class CustomerDAOI implements CustomerDAO {
 
     @ApiOperation("Add a New Customer")
     @Override
-    @PostMapping("/api/v1/add_new_customer")
+    @PostMapping("/api/v1/customers")
     public void addNewCustomer(CustomerTO customer) {
-        String sql = "INSERT INTO customers " +
-                "(customer_id, customer_name, customer_email, customer_address, customer_telephone, customer_level) values (?, ?, ?, ?, ?, ?)" ;
-        template.update(sql, new Object[]{customer.getCustomer_id(), customer.getCustomer_name(), customer.getCustomer_email(), customer.getCustomer_address(), customer.getCustomer_telephone(), customer.getCustomer_level()});
+        template.update(DBVars.ADD_NEW_CUSTOMER, customer.getCustomer_id(), customer.getCustomer_name(), customer.getCustomer_email(), customer.getCustomer_address(), customer.getCustomer_telephone(), customer.getCustomer_level());
         redisTemplate.convertAndSend(topic.getTopic(), customer);
     }
 
     @ApiOperation("Get all Customers")
     @Override
-    @GetMapping("/api/v1/get_all_customers")
+    @GetMapping("/api/v1/customers")
     public List<CustomerTO> getAllCustomers() {
         return this.template.query(
-                "select * from customers",
+                DBVars.GET_CUSTOMERS,
                 new BeanPropertyRowMapper<CustomerTO>(CustomerTO.class));
     }
 
     @ApiOperation("Update a Customer Info")
     @Override
-    @PutMapping("/api/v1/update_customer")
-    public String updateCustomerInfo(Integer id) {
-        return null;
+    @PutMapping("/api/v1/customers/{id}")
+    public void updateCustomerInfo(@PathVariable("id") Integer id, CustomerTO customer) {
+        int status = template.update(DBVars.UPDATE_CUSTOMER,
+                customer.getCustomer_id(), customer.getCustomer_name(), customer.getCustomer_email(), customer.getCustomer_address(),
+                customer.getCustomer_telephone(), customer.getCustomer_level());
     }
 
-    @ApiOperation("Search For Customer by ID")
+    @ApiOperation("Get For Customer by ID")
     @Override
-    @GetMapping("/api/v1/search_customer_by_id")
-    public List<CustomerTO> searchForCustomerByID(Integer id) {
+    @GetMapping("/api/v1/customers/{id}")
+    public List<CustomerTO> searchForCustomerByID(@PathVariable("id") Integer id) {
         return this.template.query(
-                "select * from customers where customer_id = ? ", new Object[]{id},
+                DBVars.GET_CUSTOMER_BY_ID, new Object[]{id},
                 new BeanPropertyRowMapper<CustomerTO>(CustomerTO.class));
     }
 
-    @ApiOperation("Search customer By Name")
+    @ApiOperation("Search Customer By Name")
     @Override
-    @GetMapping("/api/v1/search_customer_by_name")
-    public List<CustomerTO> searchForCustomerByName(String name) {
+    @GetMapping("/api/v1/customers/search")
+    public List<CustomerTO> searchForCustomerByName(@RequestParam(value = "name") String name) {
         return this.template.query(
-                "select * from customers where customer_name like ? ", new Object[]{name+"%"},
+                DBVars.GET_CUSTOMER_BY_NAME, new Object[]{name+"%"},
                 new BeanPropertyRowMapper<CustomerTO>(CustomerTO.class));
     }
 
-
-    @ApiOperation("Get Customer By Level")
+    @ApiOperation("Search Customer By Level")
     @Override
-    @GetMapping("/api/v1/customers/search_customer_by_level")
-    public List<CustomerTO> searchForCustomerByLevel(String level) {
+    @GetMapping("/api/v1/customers/searchLevel")
+    public List<CustomerTO> searchForCustomerByLevel(@RequestParam(value = "level") String level) {
         return this.template.query(
-                "select * from customers where customer_level = ? ", new Object[]{level},
+                DBVars.GET_CUSTOMER_BY_LEVEL, new Object[]{level},
                 new BeanPropertyRowMapper<CustomerTO>(CustomerTO.class));
+    }
+
+    @ApiOperation("Delete a Customer")
+    @Override
+    @DeleteMapping("/api/v1/customers/{id}")
+    public void deleteCustomer(@PathVariable("id") Integer id) {
+        this.template.update(DBVars.DELETE_CUSTOMER, id);
     }
 }
