@@ -1,6 +1,7 @@
 package io.turntabl.tcmsCustomers;
 
 
+import io.turntabl.tcmsCustomers.config.RedisConfig;
 import io.turntabl.tcmsCustomers.models.CustomerTO;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,28 +21,10 @@ import java.io.IOException;
 @SpringBootApplication
 public class TcmsCustomersApplication {
 
-	private RedisServer redisServer;
+//	private RedisServer redisServer;
 
 	public static void main(String[] args) {
 		SpringApplication.run(TcmsCustomersApplication.class, args);
-	}
-
-	@Bean
-	JedisConnectionFactory jedisConnectionFactory() {
-		return new JedisConnectionFactory();
-	}
-
-
-	@Bean
-	ChannelTopic topic() {
-		return new ChannelTopic("customers");
-	}
-
-	@Bean
-	public RedisTemplate<String, CustomerTO> redisTemplate() {
-		final RedisTemplate<String, CustomerTO> template = new RedisTemplate<String, CustomerTO>();
-		template.setConnectionFactory(jedisConnectionFactory());
-		template.setValueSerializer(new Jackson2JsonRedisSerializer<CustomerTO>(CustomerTO.class));
-		return template;
+		RedisConfig.redisConfiguration();
 	}
 }
