@@ -48,7 +48,7 @@ public class CustomerDAOI implements CustomerDAO {
         Publisher.publis("updater", "Customer: " + customer.getCustomer_id() + " Updated");
     }
 
-    @CrossOrigin(origins = "*")
+    @CrossOrigin
     @ApiOperation("Get For Customer by ID")
     @Override
     @GetMapping("/api/v1/customers/{id}")
@@ -59,7 +59,7 @@ public class CustomerDAOI implements CustomerDAO {
                 new BeanPropertyRowMapper<CustomerTO>(CustomerTO.class));
     }
 
-    @CrossOrigin(origins = "*")
+    @CrossOrigin
     @ApiOperation("Search Customer By Name")
     @Override
     @GetMapping("/api/v1/customers/search")
@@ -70,7 +70,7 @@ public class CustomerDAOI implements CustomerDAO {
                 new BeanPropertyRowMapper<CustomerTO>(CustomerTO.class));
     }
 
-    @CrossOrigin(origins = "*")
+    @CrossOrigin
     @ApiOperation("Search Customer By Level")
     @Override
     @GetMapping("/api/v1/customers/searchLevel")
