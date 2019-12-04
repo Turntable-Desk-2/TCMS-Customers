@@ -27,7 +27,7 @@ public class CustomerDAOI implements CustomerDAO {
         Publisher.publis("new_customer", "New Customer: " + customer.getCustomer_name() + " added");
     }
 
-    @CrossOrigin(origins = "*")
+    @CrossOrigin
     @ApiOperation("Get all Customers")
     @Override
     @GetMapping("/api/v1/customers")
