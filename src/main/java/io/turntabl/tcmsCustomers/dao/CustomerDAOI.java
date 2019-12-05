@@ -19,6 +19,7 @@ public class CustomerDAOI implements CustomerDAO {
     @Autowired
     JdbcTemplate template;
 
+    @CrossOrigin
     @ApiOperation("Add a New Customer")
     @Override
     @PostMapping("/api/v1/customers")
@@ -38,6 +39,7 @@ public class CustomerDAOI implements CustomerDAO {
                 new BeanPropertyRowMapper<CustomerTO>(CustomerTO.class));
     }
 
+    @CrossOrigin
     @ApiOperation("Update a Customer Info")
     @Override
     @PutMapping("/api/v1/customers/{id}")
@@ -83,6 +85,7 @@ public class CustomerDAOI implements CustomerDAO {
                 new BeanPropertyRowMapper<CustomerTO>(CustomerTO.class));
     }
 
+    @CrossOrigin
     @ApiOperation("Delete a Customer")
     @Override
     @DeleteMapping("/api/v1/customers/{id}")
