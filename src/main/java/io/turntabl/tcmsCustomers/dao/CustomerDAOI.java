@@ -52,11 +52,13 @@ public class CustomerDAOI implements CustomerDAO {
     @ApiOperation("Get For Customer by ID")
     @Override
     @GetMapping("/api/v1/customers/{id}")
-    public List<CustomerTO> searchForCustomerByID(@PathVariable("id") Integer id) {
+    public CustomerTO searchForCustomerByID(@PathVariable("id") Integer id) {
         Publisher.publis("customer", "Getting a Customer with id " + id);
-        return this.template.query(
-                DBVars.GET_CUSTOMER_BY_ID, new Object[]{id},
-                new BeanPropertyRowMapper<CustomerTO>(CustomerTO.class));
+
+        return (CustomerTO) template.queryForObject(
+                DBVars.GET_CUSTOMER_BY_ID,
+                new Object[]{id},
+                new BeanPropertyRowMapper(CustomerTO.class));
     }
 
     @CrossOrigin
