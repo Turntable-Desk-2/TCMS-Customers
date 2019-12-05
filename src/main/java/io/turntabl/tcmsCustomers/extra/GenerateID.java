@@ -3,7 +3,7 @@ package io.turntabl.tcmsCustomers.extra;
 import java.util.Random;
 
 public class GenerateID {
-    public int getId(int length){
+    public static int getId(int length){
         String numbers = "123456789";
         Random ran = new Random();
         int getLen = length;

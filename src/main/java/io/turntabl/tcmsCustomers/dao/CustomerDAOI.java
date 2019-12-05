@@ -3,6 +3,7 @@ package io.turntabl.tcmsCustomers.dao;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.turntabl.tcmsCustomers.extra.DBVars;
+import io.turntabl.tcmsCustomers.extra.GenerateID;
 import io.turntabl.tcmsCustomers.pubsub.Publisher;
 import io.turntabl.tcmsCustomers.models.CustomerTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class CustomerDAOI implements CustomerDAO {
     @Override
     @PostMapping("/api/v1/customers")
     public void addNewCustomer(@RequestBody CustomerTO customer) {
-        template.update(DBVars.ADD_NEW_CUSTOMER, customer.getCustomer_id(), customer.getCustomer_name(), customer.getCustomer_email(), customer.getCustomer_address(), customer.getCustomer_telephone(), customer.getCustomer_level());
+        template.update(DBVars.ADD_NEW_CUSTOMER, GenerateID.getId(6), customer.getCustomer_name(), customer.getCustomer_email(), customer.getCustomer_address(), customer.getCustomer_telephone(), customer.getCustomer_level());
         Publisher.publis("new_customer", "New Customer: " + customer.getCustomer_name() + " added");
     }
 
